@@ -1,0 +1,9 @@
+{
+  "mcp": {
+    "ai-game-developer": {
+      "enabled": true,
+      "type": "remote",
+      "url": "https://ai-game.dev/mcp/p/84ce721d"
+    }
+  }
+}
