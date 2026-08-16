@@ -1,0 +1,32 @@
+@start
+npc: text "你現在方便幫我測試一個模擬 LINE 聊天室嗎？"
+npc: image "example.png"
+npc: text "等一下會出現 3 個選項，選完之後我會依照你的答案繼續傳訊息。"
+choice:
+  - "好，我來測" => "好，我來測" -> help
+  - "先說重點" => "先說重點" -> direct
+  - "我現在很忙" => "我現在很忙" -> busy
+
+@help
+npc: text "太好了。這條分支會示範 NPC 連續傳送兩則訊息。"
+npc: text "每則 NPC 訊息前都會先顯示 ... 1 秒。"
+goto ending
+
+@direct
+npc: text "重點是：外部文字劇本、文字訊息、圖片訊息、1-3 選項、分支跳轉都已經接好。"
+choice:
+  - "了解" => "了解" -> ending
+  - "再給我圖片" => "再給我圖片" -> image_demo
+
+@image_demo
+npc: image "example.png"
+npc: text "圖片目前用 ID 佔位，之後可以接 Resources 或 Addressables 載入 Sprite。"
+goto ending
+
+@busy
+npc: text "沒問題，我先用最短流程結束。"
+goto ending
+
+@ending
+npc: text "測試完成。你可以重新播放 Scene 再試不同選項。"
+end

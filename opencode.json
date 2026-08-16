@@ -1,9 +1,16 @@
 {
+  "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "ai-game-developer": {
       "enabled": true,
-      "type": "remote",
-      "url": "https://ai-game.dev/mcp/p/84ce721d"
+      "type": "local",
+      "command": [
+        "C:/GithubWorkspace/PracticeAnything/Library/mcp-server/win-x64/gamedev-mcp-server.exe",
+        "port=23236",
+        "plugin-timeout=10000",
+        "client-transport=stdio",
+        "project=84ce721d"
+      ]
     }
   }
 }
