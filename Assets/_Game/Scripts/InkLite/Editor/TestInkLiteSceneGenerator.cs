@@ -27,57 +27,74 @@ namespace PracticeAnything.Editor.InkLite
 
             RectTransform phone = CreateRect("LineLikePhone", canvas.transform, new Vector2(760, 1320), Vector2.zero);
             Image phoneImage = phone.gameObject.AddComponent<Image>();
-            phoneImage.color = new Color(0.035f, 0.04f, 0.05f, 1f);
+            phoneImage.color = new Color(0.025f, 0.028f, 0.032f, 1f);
+            phone.gameObject.AddComponent<Shadow>().effectColor = new Color(0f, 0f, 0f, 0.35f);
 
             RectTransform screen = CreateRect("ChatScreen", phone, new Vector2(700, 1240), Vector2.zero);
             Image screenImage = screen.gameObject.AddComponent<Image>();
-            screenImage.color = new Color(0.72f, 0.82f, 0.9f, 1f);
+            screenImage.color = new Color(0.68f, 0.78f, 0.87f, 1f);
 
-            RectTransform header = CreateRect("Header", screen, new Vector2(700, 110), new Vector2(0, 565));
+            RectTransform header = CreateRect("Header", screen, new Vector2(700, 132), new Vector2(0, 554));
             Image headerImage = header.gameObject.AddComponent<Image>();
-            headerImage.color = new Color(0.05f, 0.42f, 0.22f, 1f);
-            Text title = CreateText("Title", header, "InkLite Chat 驗收", font, 34, TextAnchor.MiddleCenter, Color.white);
-            Stretch(title.rectTransform, Vector2.zero, Vector2.zero);
+            headerImage.color = new Color(0.02f, 0.78f, 0.34f, 1f);
+            Text back = CreateText("Back", header, "<", font, 38, TextAnchor.MiddleCenter, Color.white);
+            back.rectTransform.sizeDelta = new Vector2(70, 92);
+            back.rectTransform.anchoredPosition = new Vector2(-302, -18);
+            Text title = CreateText("Title", header, "InkLite 測試帳號", font, 32, TextAnchor.MiddleLeft, Color.white);
+            title.rectTransform.sizeDelta = new Vector2(420, 48);
+            title.rectTransform.anchoredPosition = new Vector2(-74, -6);
+            Text subtitle = CreateText("Subtitle", header, "LINE 風格聊天室", font, 20, TextAnchor.MiddleLeft, new Color(0.88f, 1f, 0.91f, 1f));
+            subtitle.rectTransform.sizeDelta = new Vector2(420, 32);
+            subtitle.rectTransform.anchoredPosition = new Vector2(-74, -40);
+            Text menu = CreateText("Menu", header, "...", font, 34, TextAnchor.MiddleCenter, Color.white);
+            menu.rectTransform.sizeDelta = new Vector2(86, 76);
+            menu.rectTransform.anchoredPosition = new Vector2(292, -18);
 
-            RectTransform statusBar = CreateRect("StatusBar", screen, new Vector2(700, 56), new Vector2(0, -592));
+            RectTransform statusBar = CreateRect("InputBar", screen, new Vector2(700, 76), new Vector2(0, -582));
             Image statusImage = statusBar.gameObject.AddComponent<Image>();
-            statusImage.color = new Color(0.92f, 0.96f, 0.92f, 1f);
-            Text statusText = CreateText("StatusText", statusBar, string.Empty, font, 22, TextAnchor.MiddleCenter, new Color(0.08f, 0.18f, 0.1f, 1f));
-            Stretch(statusText.rectTransform, Vector2.zero, Vector2.zero);
+            statusImage.color = new Color(0.965f, 0.97f, 0.965f, 1f);
+            RectTransform inputField = CreateRect("FakeInputField", statusBar, new Vector2(520, 46), new Vector2(-38, 0));
+            Image inputImage = inputField.gameObject.AddComponent<Image>();
+            inputImage.color = Color.white;
+            Text statusText = CreateText("StatusText", inputField, string.Empty, font, 20, TextAnchor.MiddleLeft, new Color(0.42f, 0.47f, 0.43f, 1f));
+            Stretch(statusText.rectTransform, new Vector2(22, 4), new Vector2(-22, -4));
+            Text send = CreateText("SendLabel", statusBar, "送出", font, 22, TextAnchor.MiddleCenter, new Color(0.02f, 0.78f, 0.34f, 1f));
+            send.rectTransform.sizeDelta = new Vector2(88, 52);
+            send.rectTransform.anchoredPosition = new Vector2(288, 0);
 
-            RectTransform choiceRoot = CreateRect("ChoiceRoot", screen, new Vector2(700, 240), new Vector2(0, -445));
+            RectTransform choiceRoot = CreateRect("ChoiceRoot", screen, new Vector2(700, 230), new Vector2(0, -446));
             VerticalLayoutGroup choiceLayout = choiceRoot.gameObject.AddComponent<VerticalLayoutGroup>();
-            choiceLayout.padding = new RectOffset(24, 24, 14, 14);
-            choiceLayout.spacing = 12;
+            choiceLayout.padding = new RectOffset(28, 28, 16, 16);
+            choiceLayout.spacing = 10;
             choiceLayout.childControlWidth = true;
             choiceLayout.childControlHeight = true;
             choiceLayout.childForceExpandWidth = true;
             choiceLayout.childForceExpandHeight = false;
             Image choiceBg = choiceRoot.gameObject.AddComponent<Image>();
-            choiceBg.color = new Color(0.95f, 0.98f, 0.94f, 0.96f);
+            choiceBg.color = new Color(0.965f, 0.97f, 0.965f, 0.96f);
 
             Button[] choiceButtons = new Button[3];
             Text[] choiceTexts = new Text[3];
             for (int i = 0; i < choiceButtons.Length; i++)
             {
-                choiceButtons[i] = CreateButton($"ChoiceButton{i + 1}", choiceRoot, $"Choice {i + 1}", font, new Color(0.12f, 0.62f, 0.32f, 1f));
+                choiceButtons[i] = CreateButton($"ChoiceButton{i + 1}", choiceRoot, $"Choice {i + 1}", font, new Color(0.02f, 0.78f, 0.34f, 1f));
                 choiceTexts[i] = choiceButtons[i].GetComponentInChildren<Text>();
             }
 
-            RectTransform viewport = CreateRect("Viewport", screen, new Vector2(672, 830), new Vector2(0, 45));
+            RectTransform viewport = CreateRect("Viewport", screen, new Vector2(672, 860), new Vector2(0, 62));
             Image viewportMaskImage = viewport.gameObject.AddComponent<Image>();
-            viewportMaskImage.color = new Color(0.72f, 0.82f, 0.9f, 1f);
+            viewportMaskImage.color = new Color(0.68f, 0.78f, 0.87f, 1f);
             Mask mask = viewport.gameObject.AddComponent<Mask>();
             mask.showMaskGraphic = true;
 
-            RectTransform content = CreateRect("MessageContent", viewport, new Vector2(672, 830), Vector2.zero);
+            RectTransform content = CreateRect("MessageContent", viewport, new Vector2(672, 860), Vector2.zero);
             content.anchorMin = new Vector2(0, 1);
             content.anchorMax = new Vector2(1, 1);
             content.pivot = new Vector2(0.5f, 1f);
             content.anchoredPosition = Vector2.zero;
             VerticalLayoutGroup contentLayout = content.gameObject.AddComponent<VerticalLayoutGroup>();
-            contentLayout.padding = new RectOffset(0, 0, 16, 16);
-            contentLayout.spacing = 8;
+            contentLayout.padding = new RectOffset(0, 0, 18, 18);
+            contentLayout.spacing = 10;
             contentLayout.childControlWidth = true;
             contentLayout.childControlHeight = true;
             contentLayout.childForceExpandWidth = true;
@@ -92,10 +109,11 @@ namespace PracticeAnything.Editor.InkLite
             scrollRect.vertical = true;
             scrollRect.movementType = ScrollRect.MovementType.Clamped;
 
-            RectTransform typing = CreateRect("TypingIndicator", screen, new Vector2(120, 58), new Vector2(-250, -345));
+            RectTransform typing = CreateRect("TypingIndicator", screen, new Vector2(110, 54), new Vector2(-250, -340));
             Image typingImage = typing.gameObject.AddComponent<Image>();
             typingImage.color = Color.white;
-            Text typingText = CreateText("TypingText", typing, "...", font, 28, TextAnchor.MiddleCenter, new Color(0.1f, 0.1f, 0.1f, 1f));
+            typing.gameObject.AddComponent<Shadow>().effectColor = new Color(0f, 0f, 0f, 0.08f);
+            Text typingText = CreateText("TypingText", typing, "...", font, 28, TextAnchor.MiddleCenter, new Color(0.1f, 0.12f, 0.13f, 1f));
             Stretch(typingText.rectTransform, Vector2.zero, Vector2.zero);
 
             InkLiteChatView view = screen.gameObject.AddComponent<InkLiteChatView>();

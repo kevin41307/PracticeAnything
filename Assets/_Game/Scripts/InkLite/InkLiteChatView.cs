@@ -17,6 +17,9 @@ namespace PracticeAnything.InkLite
         [SerializeField] private string[] imageIds;
         [SerializeField] private Sprite[] imageSprites;
 
+        private GameObject activeTypingRow;
+        private Text activeTypingText;
+
         public void Clear()
         {
             foreach (Transform child in messageRoot)
@@ -38,12 +41,12 @@ namespace PracticeAnything.InkLite
             rowLayout.childControlHeight = true;
             rowLayout.childForceExpandWidth = false;
             rowLayout.childForceExpandHeight = false;
-            rowLayout.padding = new RectOffset(10, 10, 4, 4);
-            rowLayout.spacing = 8;
+            rowLayout.padding = new RectOffset(18, 18, 5, 5);
+            rowLayout.spacing = 10;
             rowLayout.childAlignment = speaker == InkLiteSpeaker.Player ? TextAnchor.MiddleRight : TextAnchor.MiddleLeft;
 
             LayoutElement spacer = CreateSpacer(rowObject.transform);
-            Color bubbleColor = speaker == InkLiteSpeaker.Player ? new Color(0.22f, 0.67f, 0.32f, 1f) : Color.white;
+            Color bubbleColor = speaker == InkLiteSpeaker.Player ? new Color(0.49f, 0.86f, 0.22f, 1f) : Color.white;
             RectTransform bubble = CreateBubble(rowObject.transform, bubbleColor);
 
             if (speaker == InkLiteSpeaker.Player)
@@ -57,17 +60,17 @@ namespace PracticeAnything.InkLite
 
             if (type == InkLiteMessageType.Text)
             {
-                Text text = CreateText("MessageText", bubble, content, 22, speaker == InkLiteSpeaker.Player ? Color.white : new Color(0.08f, 0.1f, 0.12f, 1f));
+                Text text = CreateText("MessageText", bubble, content, 24, new Color(0.06f, 0.08f, 0.09f, 1f));
                 text.alignment = TextAnchor.MiddleLeft;
                 text.horizontalOverflow = HorizontalWrapMode.Wrap;
                 text.verticalOverflow = VerticalWrapMode.Overflow;
-                Stretch(text.rectTransform, new Vector2(18, 12), new Vector2(-18, -12));
-                SetBubbleSize(bubble, new Vector2(560, Mathf.Max(64, EstimateTextHeight(content))));
+                Stretch(text.rectTransform, new Vector2(20, 14), new Vector2(-20, -14));
+                SetBubbleSize(bubble, new Vector2(520, Mathf.Max(68, EstimateTextHeight(content))));
             }
             else
             {
                 Image image = bubble.GetComponent<Image>();
-                image.color = speaker == InkLiteSpeaker.Player ? new Color(0.18f, 0.55f, 0.28f, 1f) : new Color(0.86f, 0.91f, 0.96f, 1f);
+                image.color = speaker == InkLiteSpeaker.Player ? new Color(0.49f, 0.86f, 0.22f, 1f) : Color.white;
                 if (TryGetImageSprite(content, out Sprite sprite))
                 {
                     Image contentImage = CreateImage("ImageContent", bubble, sprite);
@@ -75,7 +78,7 @@ namespace PracticeAnything.InkLite
                 }
                 else
                 {
-                    Text imageLabel = CreateText("ImageLabel", bubble, $"[圖片]\n{content}", 22, speaker == InkLiteSpeaker.Player ? Color.white : new Color(0.08f, 0.1f, 0.12f, 1f));
+                    Text imageLabel = CreateText("ImageLabel", bubble, $"[圖片]\n{content}", 22, new Color(0.06f, 0.08f, 0.09f, 1f));
                     imageLabel.alignment = TextAnchor.MiddleCenter;
                     Stretch(imageLabel.rectTransform, new Vector2(16, 16), new Vector2(-16, -16));
                 }
@@ -89,14 +92,61 @@ namespace PracticeAnything.InkLite
 
         public void ShowTyping(bool visible)
         {
-            if (typingIndicator != null)
+            if (!visible)
             {
-                typingIndicator.SetActive(visible);
+                if (activeTypingRow != null)
+                {
+                    Destroy(activeTypingRow);
+                    activeTypingRow = null;
+                    activeTypingText = null;
+                }
+
+                if (typingIndicator != null)
+                {
+                    typingIndicator.SetActive(false);
+                }
+
+                return;
             }
 
-            if (typingText != null)
+            if (typingIndicator != null)
             {
-                typingText.text = "...";
+                typingIndicator.SetActive(false);
+            }
+
+            if (activeTypingRow != null)
+            {
+                return;
+            }
+
+            activeTypingRow = new GameObject("Npc_Typing_Row", typeof(RectTransform));
+            activeTypingRow.transform.SetParent(messageRoot, false);
+            HorizontalLayoutGroup rowLayout = activeTypingRow.AddComponent<HorizontalLayoutGroup>();
+            rowLayout.childControlWidth = false;
+            rowLayout.childControlHeight = true;
+            rowLayout.childForceExpandWidth = false;
+            rowLayout.childForceExpandHeight = false;
+            rowLayout.padding = new RectOffset(18, 18, 5, 5);
+            rowLayout.spacing = 10;
+            rowLayout.childAlignment = TextAnchor.MiddleLeft;
+
+            RectTransform bubble = CreateBubble(activeTypingRow.transform, Color.white);
+            activeTypingText = CreateText("TypingText", bubble, ".", 28, new Color(0.1f, 0.12f, 0.13f, 1f));
+            activeTypingText.alignment = TextAnchor.MiddleCenter;
+            Stretch(activeTypingText.rectTransform, Vector2.zero, Vector2.zero);
+            SetBubbleSize(bubble, new Vector2(110, 54));
+            CreateSpacer(activeTypingRow.transform);
+
+            Canvas.ForceUpdateCanvases();
+            scrollRect.verticalNormalizedPosition = 0f;
+        }
+
+        public void SetTypingText(string value)
+        {
+            Text targetText = activeTypingText != null ? activeTypingText : typingText;
+            if (targetText != null)
+            {
+                targetText.text = value;
             }
         }
 
@@ -147,6 +197,7 @@ namespace PracticeAnything.InkLite
             bubbleObject.transform.SetParent(parent, false);
             Image image = bubbleObject.AddComponent<Image>();
             image.color = color;
+            bubbleObject.AddComponent<Shadow>().effectColor = new Color(0f, 0f, 0f, 0.08f);
             return bubbleObject.GetComponent<RectTransform>();
         }
 

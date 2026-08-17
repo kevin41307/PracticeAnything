@@ -9,6 +9,7 @@ namespace PracticeAnything.InkLite
         [SerializeField] private InkLiteChatView view;
         [SerializeField] private string startNode = "start";
         [SerializeField] private float npcTypingSeconds = 1f;
+        [SerializeField] private float npcTypingFrameSeconds = 0.25f;
         [SerializeField] private float messageGapSeconds = 0.25f;
 
         private InkLiteScenario scenario;
@@ -55,9 +56,7 @@ namespace PracticeAnything.InkLite
                 {
                     if (message.Speaker == InkLiteSpeaker.Npc)
                     {
-                        view.ShowTyping(true);
-                        yield return new WaitForSeconds(npcTypingSeconds);
-                        view.ShowTyping(false);
+                        yield return PlayNpcTyping();
                     }
 
                     view.AddMessage(message.Speaker, message.MessageType, message.Content);
@@ -97,6 +96,26 @@ namespace PracticeAnything.InkLite
             }
 
             view.SetStatus("模擬結束");
+        }
+
+        private IEnumerator PlayNpcTyping()
+        {
+            string[] frames = { ".", "..", "..." };
+            float elapsed = 0f;
+            int frameIndex = 0;
+
+            view.ShowTyping(true);
+            while (elapsed < npcTypingSeconds)
+            {
+                view.SetTypingText(frames[frameIndex]);
+                frameIndex = (frameIndex + 1) % frames.Length;
+
+                float waitSeconds = Mathf.Min(npcTypingFrameSeconds, npcTypingSeconds - elapsed);
+                elapsed += waitSeconds;
+                yield return new WaitForSeconds(waitSeconds);
+            }
+
+            view.ShowTyping(false);
         }
     }
 }
